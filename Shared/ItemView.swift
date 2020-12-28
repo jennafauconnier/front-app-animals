@@ -74,10 +74,19 @@ struct ItemView: View {
             }
             
             Button(action: {
+                guard let number = URL(string: "tel://" + "4151231234") else { return }
+                UIApplication.shared.open(number)
+                
+            }) {
+                CallButtonContent()
+            }
+            
+            Button(action: {
                 viewRouter.currentPage = .page1
             }) {
                 BackButtonContent()
             }
+                        
         }
     }
 }
@@ -95,6 +104,17 @@ struct BackButtonContent : View {
             .foregroundColor(.white)
             .frame(width: 200, height: 50)
             .background(Color.blue)
+            .cornerRadius(15)
+            .padding(.top, 50)
+    }
+}
+
+struct CallButtonContent : View {
+    var body: some View {
+        return Text("Appeler")
+            .foregroundColor(.white)
+            .frame(width: 200, height: 50)
+            .background(Color.green)
             .cornerRadius(15)
             .padding(.top, 50)
     }
