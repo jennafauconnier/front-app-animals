@@ -4,8 +4,10 @@
 //Visit www.BLCKBIRDS.com for more tutorials.
 
 import SwiftUI
-
 import Combine
+import SDWebImageSwiftUI
+
+
 
 struct ItemView: View {
     @ObservedObject var model = ItemModel()
@@ -21,8 +23,6 @@ struct ItemView: View {
         }
     }
     
-    
-    
     private func stringToDate (ISOdate: String) -> String {
         
         var date:Date = Date()
@@ -37,16 +37,42 @@ struct ItemView: View {
         return formatter2.string(from: date)
 
     }
+
+    
     
     var body: some View {
+        
         VStack (alignment: .center) {
-            Text("Bonjour je suis ")
-            Text(model.animal.first?.image_url ?? "")
-            Text(model.animal.first?.nom ?? "")
-            Text(model.animal.first?.name ?? "")
-            Text(model.animal.first?.sexe ?? "").font(.system(size: 90))
-            Text(self.stringToDate(ISOdate: model.animal.first?.date_naissance ?? ""))
+                        
+            HStack {
+                Text("Salut je suis")
+                Text(model.animal.first?.nom ?? "")
+            }
+            
+            HStack {
+                WebImage(url: URL(string: model.animal.first?.image_url ?? ""))
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 300, height: 200)
+                    .padding()
 
+            }
+
+            HStack  {
+                Text("Je suis un")
+                Text(model.animal.first?.name ?? "")
+            }
+            
+            HStack{
+                Text("Naissance :")
+                Text(self.stringToDate(ISOdate: model.animal.first?.date_naissance ?? ""))
+            }
+            
+            HStack {
+                Text("Sexe :")
+                Text(model.animal.first?.sexe ?? "").font(.system(size: 20))
+            }
+            
             Button(action: {
                 viewRouter.currentPage = .page1
             }) {
@@ -73,27 +99,5 @@ struct BackButtonContent : View {
             .padding(.top, 50)
     }
 }
+    
 
-
-struct ImageView: View {
-    @ObservedObject var imageLoader:ImageLoader
-    @State var image:UIImage = UIImage()
-init(withURL url:String) {
-        imageLoader = ImageLoader(urlString:url)
-    }
-var body: some View {
-    VStack {
-        Image(uiImage: image)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width:100, height:100)
-    }.onReceive(imageLoader.dataPublisher) { data in
-        self.image = UIImage(data: data) ?? UIImage()
-    }
-  }
-}
-struct ImageView_Previews: PreviewProvider {
-    static var previews: some View {
-        ImageView(withURL: "")
-    }
-}
